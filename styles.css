@@ -9,7 +9,7 @@
   
 }
 
-.word-group > .word {
+.word-group .word {
   padding: .2em .6em;
   color: darkblue;
   background: white;
@@ -18,7 +18,7 @@
   margin: .5em;
 }
 
-.word-group > .word.selected {
+.word-group .word.selected {
   color: white;
   background: darkblue;
 }

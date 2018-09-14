@@ -5,14 +5,14 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      words: words
+      units: words
     }
   }
   
   render() {
     return (
     <div className="app">
-      <WordSelector units={this.state.words} />
+      <WordSelector units={this.state.units} />
     </div>
     );
   }
