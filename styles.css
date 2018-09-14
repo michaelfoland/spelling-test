@@ -1,3 +1,24 @@
 .app {
   border: solid 1px gray;
 }
+
+.word-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  
+}
+
+.word-group > .word {
+  padding: .2em .6em;
+  color: darkblue;
+  background: white;
+  border: solid 1px darkblue;
+  border-radius: .5em;
+  margin: .5em;
+}
+
+.word-group > .word.selected {
+  color: white;
+  background: darkblue;
+}
