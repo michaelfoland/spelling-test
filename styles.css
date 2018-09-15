@@ -8,6 +8,7 @@
 .app > * > * { border: solid 2px green; box-sizing: border-box; }
 .app >* > * > * { border: solid 2px blue; box-sizing: border-box; }
 */
+.test { border: solid 2px red; box-sizing: border-box; }
 
 @media (min-width: 900px) {
   html {
@@ -82,14 +83,16 @@ body {
 }
 
 @media (min-width: 900px) {
-  .word-selector {
+  .word-selector,
+  .test {
     width: 80%;
     height: 80%;
   }
 }
 
 @media (max-width: 899px) {
-  .word-selector {
+  .word-selector,
+  .test {
     width: 100%;
   }
 }

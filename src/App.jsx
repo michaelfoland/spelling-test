@@ -1,5 +1,7 @@
 import { words } from './words.js';
 import { WordSelector } from './WordSelector.js';
+import { Test } from './Test.js';
+import shuffle from '../node_modules/lodash-es/shuffle.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -14,7 +16,7 @@ class App extends React.Component {
   startTest = (words) => {
     this.setState({
       step: 'test',
-      testWords: words
+      testWords: shuffle(words)
     });
   }  
   
@@ -29,9 +31,7 @@ class App extends React.Component {
         }
         
         {this.state.step === 'test' && 
-          <div>
-            Now there will be a test on:   {this.state.testWords.join(' ')}
-          </div>
+          <Test words={this.state.testWords}/>
         }
       </div>
     );
