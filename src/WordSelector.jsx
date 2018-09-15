@@ -1,38 +1,57 @@
 import { WordGroup } from './WordGroup.js';
+import { UnitSelector } from './UnitSelector.js';
+import { SelectedWords } from './SelectedWords.js';
 
 export class WordSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      visibleChild: 'units',
       visibleUnit: null,
       selectedWords: []
     }
   }
-
-  toggleWord = (word) => {
+  
+  showWords = (unitNumber) => {
+    const visibleUnit = this.props.units.find(unit => unit.unitNumber === unitNumber);
     
-    this.setState(prevState => {
-      let newState;
-      
-      if (prevState.selectedWords.includes(word)) {
-        newState = prevState.selectedWords.slice(0);
-        let index = newState.indexOf(word);
-        newState.splice(index, 1);
-      } else {
-        newState = prevState.selectedWords.concat(word);
-      }
-      
-      return {selectedWords: newState};
+    this.setState({
+      visibleChild: 'words',
+      visibleUnit: visibleUnit
     });
   }
   
-  deselectWords = (words) => {
+  toggleWord = (word) => {
+    if (this.state.selectedWords.includes(word)) {
+      this.deselectWord(word);
+    } else {
+      this.selectWord(word);
+    }
+  }
+  
+  selectWord = (word) => {
+    this.setState({
+      selectedWords: this.state.selectedWords.concat(word)
+    });
+  }
+  
+  deselectWord = (word) => {
+    const newWords = this.state.selectedWords.slice(0);
+    const index = newWords.indexOf(word);
+    newWords.splice(index,1);
+    
+    this.setState({
+      selectedWords: newWords
+    });
+  }
+  
+  deselectAll = (words) => {
     this.setState(prevState => ({
       selectedWords: prevState.selectedWords.filter(word => !words.includes(word))
     }));
   }
   
-  selectWords = (words) => {
+  selectAll = (words) => {
     // filter new words against already selected words
     const newWords = words.filter(word => !this.state.selectedWords.includes(word));
     
@@ -40,36 +59,53 @@ export class WordSelector extends React.Component {
       selectedWords: prevState.selectedWords.concat(newWords)
     }));
   }
-
-  handleClick = (e) => {
-    const unit = this.props.units.find(unit => {
-      return unit.unit === parseInt(e.target.dataset.unit);
-    });
-    
-    if (!unit) return;
-    
+  
+  closeWordGroup = () => {
     this.setState({
-      visibleUnit: unit
+      visibleChild: 'units',
+      visibleUnit: null
     });
   }
   
-  getWordGroupVisibility = () => {
-    return this.state.visibleUnit === 'null' ? 'hidden': '';
+  openVerify = () => {
+    this.setState({
+      visibleChild: 'verify'
+    });
+    
+    console.log('should open screen to check words now');
   }
   
   render() {
-    let wordGroup = '';
+    let content = '';
+    if (this.state.visibleChild === 'units') {
+      content = <UnitSelector 
+                unitNumbers={this.props.units.map(unit => unit.unitNumber)} 
+                showWords={this.showWords}/>;
     
-    // conditionally render word group
-    if (this.state.visibleUnit) {
-      wordGroup = <WordGroup className="getWordGroupVisibility()" unit={this.state.visibleUnit} selectWords={this.selectWords} deselectWords={this.deselectWords} toggleWord={this.toggleWord} selectedWords={this.state.selectedWords} />
-    }
+    } else if (this.state.visibleChild === 'words') {
+      content = 
+        <WordGroup 
+          unit={this.state.visibleUnit} 
+          toggleWord={this.toggleWord} 
+          selectAll={this.selectAll}
+          deselectAll={this.deselectAll}
+          close={this.closeWordGroup}
+          selectedWords={this.state.selectedWords}/>
+    } 
     
     return (
       <div className="word-selector">
-        {this.props.units.map((unit, i) => <button key={i} data-unit={unit.unit} onClick={this.handleClick}>Unit {unit.unit}</button>)}
-        {wordGroup}
+        <h2>Choose some words:</h2>
+        {content}
+        {(this.state.selectedWords.length > 0 && 
+          this.state.visibleChild === 'units') && 
+          <SelectedWords words={this.state.selectedWords}/>}
+        {(this.state.selectedWords.length > 0 && 
+          this.state.visibleChild === 'units') && 
+          <button className="start-button" onClick={() => {this.props.startTest(this.state.selectedWords)}}>Start the test!</button>}
       </div>
+
     );
   }
+  
 }

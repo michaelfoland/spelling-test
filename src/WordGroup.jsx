@@ -1,4 +1,5 @@
 export class WordGroup extends React.Component {
+  /*
   handleWordClick = (e) => {
     this.props.toggleWord(e.target.dataset.word);
   }
@@ -17,19 +18,40 @@ export class WordGroup extends React.Component {
   isSelected = (word) => {
     return (this.props.selectedWords.includes(word) ? 'selected' : '');
   }
+  */
+  
+  getClassName(word) {
+    return (this.props.selectedWords.includes(word) ? 'selected' : '');
+  }
   
   render() {
     return (
       <div className="word-group">
-        <div className="word-group__button-container">
-          <button role="button" className="word-group__button" onClick={this.handleButtonClick} data-action="select">Select all</button>
-          <button role="button" className="word-group__button" data-action="deselect" onClick={this.handleButtonClick}>Deselect all</button>
+        <div className="word-group__heading">
+          <h3>
+            Unit {this.props.unit.unitNumber}
+          </h3>            
+          <button className="plain-button" onClick={this.props.close}>go back</button>
+
         </div>
-        <div className="word-group__list">
-        {this.props.unit.words.map((word, i) => 
-          <span className={'word ' + this.isSelected(word)} data-word={word} onClick={this.handleWordClick} key={i}>{word}</span>)}
+        <div className="word-group__meta-buttons">
+          <button className="plain-button" onClick={() => { this.props.selectAll(this.props.unit.words) }}>Select all</button>
+          <button className="plain-button" onClick={() => { this.props.deselectAll(this.props.unit.words) }}>Deselect all</button>
         </div>
-      </div>	
+        <div className="word-group__word-buttons">
+          {this.props.unit.words.map(word => 
+            <button 
+              key={word} 
+              data-word={word}
+              onClick={() => {this.props.toggleWord(word)}}
+              className={this.getClassName(word)}>
+                {word}
+            </button>
+          )}
+          
+        </div>
+        
+      </div>
     );
   }
 }
